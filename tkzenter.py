@@ -120,6 +120,33 @@ class Tkzenter(Tk):
                     widget.grid(row=i, column=j)
                 last_widget = widget
 
+    def stay_on_top(self, boolean: bool = True):
+        self.attributes("-topmost", boolean)
+
+    def pad_row(self, row: int, direction: str, qty: int):
+        if direction not in 'xy':
+            # TODO: proper exception here
+            print("Invalid direction. Options are 'x', 'y', or 'xy'.")
+            return
+        for elm in self.grid_slaves(row=row):
+            if 'x' in direction:
+                elm.grid(padx=qty)
+            if 'y' in direction:
+                elm.grid(pady=qty)
+
+    def pad_buttons(self, list_of_buttons_and_padstrings: list[list]):
+        for button, padstring in list_of_buttons_and_padstrings:
+            button.configure(padding=padstring)
+
+    def make_sticky(self, direction: str, widgets: list):
+        for letter in direction:
+            if letter not in 'nsew':
+                # TODO proper exception here
+                print(f"Invalid letter: {letter}")
+                return
+        for w in widgets:
+            w.grid(sticky=direction)
+
 
 if __name__ == "__main__":
     gui = Tkzenter("Test Gui")
@@ -142,7 +169,16 @@ if __name__ == "__main__":
     gui.grid_group([[l["test"], b['button']],
                     [l["entry1"], e["entry1"]],
                     [b["btn1"], b["btn2"], b["btn3"]],
-                    [e["entry2"], e["entry3"]],
+                    [e["entry2"], e["entry3"], RSPAN],
                     [l["entry2"], l["entry3"]],
                     ])
+    gui.make_sticky('e', [l["entry2"], l["entry3"]])
+    gui.pad_row(1, 'y', 30)
+    gui.pad_row(3, 'y', 30)
+    gui.pad_buttons([
+        [b["btn1"], '20 10 1 10'],
+        [b["btn2"], '1 10 1 10'],
+        [b["btn3"], '1 10 1 10'],
+        ])
+    gui.stay_on_top()
     gui.mainloop()

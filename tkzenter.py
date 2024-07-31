@@ -75,6 +75,23 @@ class Tkzenter(Tk):
         elif textvar:
             self.labels[name] = ttk.Label(root, textvariable=textvar)
 
+    def grid_group(self, list_of_rows: list[list]):
+        for i, widget_list in enumerate(list_of_rows):
+            col_span = 1
+            last_widget = None
+            for j, widget in enumerate(widget_list):
+                if widget == SKIP:
+                    continue
+                elif widget == RSPAN:
+                    col_span += 1
+                    if widget == widget_list[-1]:
+                        last_widget.grid(columnspan=col_span)
+                    continue
+                else:
+                    if col_span > 1:
+                        last_widget.grid(columnspan=col_span)
+                    widget.grid(row=i, column=j)
+                last_widget = widget
 
 
 if __name__ == "__main__":
@@ -82,4 +99,9 @@ if __name__ == "__main__":
     gui.menubar_add("Edit", [
         ["Preferences", lambda: print("editing...")]
         ])
+    gui.label_create(gui, 'test', text="Testing")
+    gui.label_create(gui, 'test2', text="T2sting")
+    gui.grid_group([[gui.labels["test"]]])
+    # gui.labels["test"].grid(row=0, column=0)
+
     gui.mainloop()

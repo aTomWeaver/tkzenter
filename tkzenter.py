@@ -81,10 +81,26 @@ class Tkzenter(Tk):
         if command:
             self.buttons[name].configure(command=command)
 
+    def buttons_create(self, list_of_btn_lists: list[list]):
+        for btn_list in list_of_btn_lists:
+            root, name, text, *command = btn_list
+            if command:
+                self.button_create(root, name, text, command=command[0])
+            else:
+                self.button_create(root, name, text)
+
     def entry_create(self, root, name: str, label: str = ""):
         self.entries[name] = ttk.Entry(root)
         if label:
             self.label_create(root, name, text=label)
+
+    def entries_create(self, list_of_entry_lists: list[list]):
+        for entry_list in list_of_entry_lists:
+            root, name, *label = entry_list
+            if label:
+                self.entry_create(root, name, label=label[0])
+            else:
+                self.entry_create(root, name)
 
     def grid_group(self, list_of_rows: list[list]):
         for i, widget_list in enumerate(list_of_rows):
@@ -112,8 +128,21 @@ if __name__ == "__main__":
         ])
     gui.label_create(gui, 'test', text="Testing")
     gui.button_create(gui, 'button', text="Hi", command=lambda: print("heyo"))
+    gui.buttons_create([
+        [gui, 'btn1', 'hi', lambda: print("hello")],
+        [gui, 'btn2', 'bye', lambda: print("goodbye")],
+        [gui, 'btn3', 'hi again', lambda: print("hi again")],
+        ])
     gui.entry_create(gui, 'entry1', label="yo")
-    gui.grid_group([[gui.labels["test"], gui.buttons['button']],
-                    [gui.labels["entry1"], gui.entries["entry1"]]])
-
+    gui.entries_create([
+        [gui, 'entry2', "this is entry 2"],
+        [gui, 'entry3', "this is entry 3"],
+        ])
+    l, b, e = gui.labels, gui.buttons, gui.entries
+    gui.grid_group([[l["test"], b['button']],
+                    [l["entry1"], e["entry1"]],
+                    [b["btn1"], b["btn2"], b["btn3"]],
+                    [e["entry2"], e["entry3"]],
+                    [l["entry2"], l["entry3"]],
+                    ])
     gui.mainloop()

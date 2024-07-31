@@ -75,6 +75,17 @@ class Tkzenter(Tk):
         elif textvar:
             self.labels[name] = ttk.Label(root, textvariable=textvar)
 
+    def button_create(self, root, name: str, text: str,
+                      command: callable = None):
+        self.buttons[name] = ttk.Button(root, text=text)
+        if command:
+            self.buttons[name].configure(command=command)
+
+    def entry_create(self, root, name: str, label: str = ""):
+        self.entries[name] = ttk.Entry(root)
+        if label:
+            self.label_create(root, name, text=label)
+
     def grid_group(self, list_of_rows: list[list]):
         for i, widget_list in enumerate(list_of_rows):
             col_span = 1
@@ -100,8 +111,9 @@ if __name__ == "__main__":
         ["Preferences", lambda: print("editing...")]
         ])
     gui.label_create(gui, 'test', text="Testing")
-    gui.label_create(gui, 'test2', text="T2sting")
-    gui.grid_group([[gui.labels["test"]]])
-    # gui.labels["test"].grid(row=0, column=0)
+    gui.button_create(gui, 'button', text="Hi", command=lambda: print("heyo"))
+    gui.entry_create(gui, 'entry1', label="yo")
+    gui.grid_group([[gui.labels["test"], gui.buttons['button']],
+                    [gui.labels["entry1"], gui.entries["entry1"]]])
 
     gui.mainloop()

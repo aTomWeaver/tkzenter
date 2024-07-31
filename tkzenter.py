@@ -57,6 +57,25 @@ class Tkzenter(Tk):
         if initial:
             self.tkvars[name].set(initial)
 
+    def tkvars_create(self, list_of_tkvars: list[list]):
+        for tkvar in list_of_tkvars:
+            kind, name, *initial = tkvar
+            if initial:
+                self.tkvar_create(kind, name, initial=initial)
+            else:
+                self.tkvar_create(kind, name)
+
+    def label_create(self, root, name, text="", textvar=""):
+        if text and textvar:
+            # TODO: proper exception here
+            print("A label cannot have both text and a textvariable.")
+            return
+        if text:
+            self.labels[name] = ttk.Label(root, text=text)
+        elif textvar:
+            self.labels[name] = ttk.Label(root, textvariable=textvar)
+
+
 
 if __name__ == "__main__":
     gui = Tkzenter("Test Gui")

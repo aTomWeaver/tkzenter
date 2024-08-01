@@ -1,4 +1,5 @@
-from tkinter import *
+from tkinter import Tk
+from tkinter import Menu
 from tkinter import ttk
 from tkinter import StringVar
 from tkinter import messagebox
@@ -7,6 +8,7 @@ from tkinter import filedialog
 
 SKIP = "skip"
 RSPAN = "rspan"
+
 
 class Tkzenter(Tk):
     def __init__(self, app_title: str = "Tkzenter"):
@@ -228,7 +230,7 @@ if __name__ == "__main__":
                     [e["entry2"], e["entry3"], RSPAN],
                     [l["entry2"], l["entry3"]],
                     ])
-    gui.set_label_font("Hack 20 bold", l["entry2"])
+    gui.set_label_font("Hack 20 bold", l["test"])
     gui.make_sticky('e', [l["entry2"], l["entry3"]])
     gui.pad_row(1, 'y', 30)
     gui.pad_row(3, 'y', 30)

@@ -183,6 +183,21 @@ class Tkzenter(Tk):
             return
         return result
 
+    def set_config_path(self, path: str):
+        self.config_path = path
+
+    def set_label_font(self, font_string: str, label=None):
+        '''If no label object is passed, sets label font for all labels
+        with font_string of format: font font-size style.
+
+        Ex) self.set_label_font("Calibri 12 bold")
+        '''
+        if label is not None:
+            label.configure(font=font_string)
+        else:
+            for label in self.labels.values():
+                label.configure(font=font_string)
+
 
 if __name__ == "__main__":
     gui = Tkzenter("Test Gui")
@@ -213,6 +228,7 @@ if __name__ == "__main__":
                     [e["entry2"], e["entry3"], RSPAN],
                     [l["entry2"], l["entry3"]],
                     ])
+    gui.set_label_font("Hack 20 bold", l["entry2"])
     gui.make_sticky('e', [l["entry2"], l["entry3"]])
     gui.pad_row(1, 'y', 30)
     gui.pad_row(3, 'y', 30)

@@ -147,6 +147,42 @@ class Tkzenter(Tk):
         for w in widgets:
             w.grid(sticky=direction)
 
+    def dialog(self, kind: str, msg: str = "", title: str = "") -> str | bool | None:
+        if not title:
+            title = self.app_title
+        m = messagebox
+        mboxes = {
+                'info': m.showinfo,
+                'alert': m.showwarning,
+                'error': m.showerror,
+                'askyesno': m.askyesno,
+                'askyesnocancel': m.askyesnocancel,
+                'askokcancel': m.askokcancel,
+                'askretrycancel': m.askretrycancel
+                }
+        d = simpledialog
+        dlgs = {
+                'askstring': d.askstring,
+                'askinteger': d.askinteger,
+                'askfloat': d.askfloat
+                }
+        f = filedialog
+        f_dlgs = {
+                'askopenfilename': f.askopenfilename,
+                'askdirectory': f.askdirectory
+                }
+        if kind in mboxes:
+            result = mboxes[kind](title=title, message=msg)
+        elif kind in dlgs:
+            result = dlgs[kind](title=title, prompt=msg)
+        elif kind in f_dlgs:
+            result = f_dlgs[kind]()
+        else:
+            # TODO proper exception here
+            print("Invalid dialog option.")
+            return
+        return result
+
 
 if __name__ == "__main__":
     gui = Tkzenter("Test Gui")
@@ -156,8 +192,8 @@ if __name__ == "__main__":
     gui.label_create(gui, 'test', text="Testing")
     gui.button_create(gui, 'button', text="Hi", command=lambda: print("heyo"))
     gui.buttons_create([
-        [gui, 'btn1', 'hi', lambda: print("hello")],
-        [gui, 'btn2', 'bye', lambda: print("goodbye")],
+        [gui, 'btn1', 'hi', lambda: gui.dialog("alert", "Testing the alert!")],
+        [gui, 'btn2', 'bye', lambda: print(gui.dialog("askopenfilename"))],
         [gui, 'btn3', 'hi again', lambda: print("hi again")],
         ])
     gui.entry_create(gui, 'entry1', label="yo")
@@ -166,6 +202,11 @@ if __name__ == "__main__":
         [gui, 'entry3', "this is entry 3"],
         ])
     l, b, e = gui.labels, gui.buttons, gui.entries
+    gui.pad_buttons([
+        [b["btn1"], '20 10 1 10'],
+        [b["btn2"], '1 10 1 10'],
+        [b["btn3"], '1 10 1 10'],
+        ])
     gui.grid_group([[l["test"], b['button']],
                     [l["entry1"], e["entry1"]],
                     [b["btn1"], b["btn2"], b["btn3"]],
@@ -175,10 +216,5 @@ if __name__ == "__main__":
     gui.make_sticky('e', [l["entry2"], l["entry3"]])
     gui.pad_row(1, 'y', 30)
     gui.pad_row(3, 'y', 30)
-    gui.pad_buttons([
-        [b["btn1"], '20 10 1 10'],
-        [b["btn2"], '1 10 1 10'],
-        [b["btn3"], '1 10 1 10'],
-        ])
     gui.stay_on_top()
     gui.mainloop()
